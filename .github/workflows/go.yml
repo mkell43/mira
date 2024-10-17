@@ -1,19 +1,26 @@
 name: Go
-on: [push]
+on:
+  push:
+  workflow_dispatch: # Allow manual triggering
+
 jobs:
 
   test:
     name: Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [1.17, 1.18, 1.19, 1.20, 1.21, 1.22, 1.23]
     steps:
 
-    - name: Set up Go 1.17
-      uses: actions/setup-go@v1
+    - name: Set up Go ${{ matrix.go-version }}
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.17
+        go-version: ${{ matrix.go-version }}
       id: go
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v1
+      uses: actions/checkout@v3
+
     - name: Test
       run: go test -v -bench -count=1 ./models
