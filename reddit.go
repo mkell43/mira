@@ -48,19 +48,31 @@ func (c *Reddit) MiraRequest(method string, target string, payload map[string]st
 	fmt.Printf("X-Ratelimit-Used: %d", testRateLimitUsed)
 
 	// Extract rate-limiting information from the response headers
-	if rateLimitUsed := response.Header.Get("X-Ratelimit-Used"); rateLimitUsed != "" {
-		if used, err := strconv.Atoi(rateLimitUsed); err == nil {
-			c.RateLimitUsed = used
+	rateLimitUsedStr := response.Header.Get("X-Ratelimit-Used")
+	rateLimitRemainingStr := response.Header.Get("X-Ratelimit-Remaining")
+	rateLimitResetStr := response.Header.Get("X-Ratelimit-Reset")
+	if rateLimitUsedStr != "" {
+		used, err := strconv.Atoi(strings.TrimSpace(rateLimitUsedStr))
+		if err == nil {
+			c.RateLimitUsed = used // Correctly assign to struct field
+		} else {
+			fmt.Printf("Error converting X-Ratelimit-Used: %s\n", err)
 		}
 	}
-	if rateLimitRemaining := response.Header.Get("X-Ratelimit-Remaining"); rateLimitRemaining != "" {
-		if remaining, err := strconv.Atoi(rateLimitRemaining); err == nil {
-			c.RateLimitRemaining = remaining
+	if rateLimitRemainingStr != "" {
+		remaining, err := strconv.Atoi(strings.TrimSpace(rateLimitRemainingStr))
+		if err == nil {
+			c.RateLimitRemaining = remaining // Correctly assign to struct field
+		} else {
+			fmt.Printf("Error converting X-Ratelimit-Remaining: %s\n", err)
 		}
 	}
-	if rateLimitReset := response.Header.Get("X-Ratelimit-Reset"); rateLimitReset != "" {
-		if reset, err := strconv.Atoi(rateLimitReset); err == nil {
-			c.RateLimitReset = reset
+	if rateLimitResetStr != "" {
+		reset, err := strconv.Atoi(strings.TrimSpace(rateLimitResetStr))
+		if err == nil {
+			c.RateLimitReset = reset // Correctly assign to struct field
+		} else {
+			fmt.Printf("Error converting X-Ratelimit-Reset: %s\n", err)
 		}
 	}
 
