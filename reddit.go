@@ -51,6 +51,9 @@ func (c *Reddit) MiraRequest(method string, target string, payload map[string]st
 	rateLimitUsedStr := response.Header.Get("X-Ratelimit-Used")
 	rateLimitRemainingStr := response.Header.Get("X-Ratelimit-Remaining")
 	rateLimitResetStr := response.Header.Get("X-Ratelimit-Reset")
+	fmt.Printf("X-Ratelimit-Used: '%s'\n", rateLimitUsedStr)
+	fmt.Printf("X-Ratelimit-Remaining: '%s'\n", rateLimitRemainingStr)
+	fmt.Printf("X-Ratelimit-Reset: '%s'\n", rateLimitResetStr)
 	if rateLimitUsedStr != "" {
 		used, err := strconv.Atoi(strings.TrimSpace(rateLimitUsedStr))
 		if err == nil {
@@ -60,7 +63,7 @@ func (c *Reddit) MiraRequest(method string, target string, payload map[string]st
 		}
 	}
 	if rateLimitRemainingStr != "" {
-		remaining, err := strconv.Atoi(strings.TrimSpace(rateLimitRemainingStr))
+		remaining, err := strconv.ParseFloat(strings.TrimSpace(rateLimitRemainingStr), 64)
 		if err == nil {
 			c.RateLimitRemaining = remaining // Correctly assign to struct field
 		} else {
