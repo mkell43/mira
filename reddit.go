@@ -41,6 +41,11 @@ func (c *Reddit) MiraRequest(method string, target string, payload map[string]st
 	defer response.Body.Close()
 
 	fmt.Printf("X-Ratelimit-Used: %s", response.Header.Get("X-Ratelimit-Used"))
+	testRateLimitUsed, err := strconv.Atoi(response.Header.Get("X-Ratelimit-Used"))
+	if err != nil {
+		fmt.Printf("Error: %s", err)
+	fmt.Printf("X-Ratelimit-Used: %d", testRateLimitUsed)
+
 
 	// Extract rate-limiting information from the response headers
 	if rateLimitUsed := response.Header.Get("X-Ratelimit-Used"); rateLimitUsed != "" {
