@@ -40,7 +40,7 @@ func (c *Reddit) MiraRequest(method string, target string, payload map[string]st
 	}
 	defer response.Body.Close()
 
-	fmt.Println(response.Header.Get("X-Ratelimit-Used"))
+	fmt.Printf("X-Ratelimit-Used: %s", response.Header.Get("X-Ratelimit-Used"))
 
 	// Extract rate-limiting information from the response headers
 	if rateLimitUsed := response.Header.Get("X-Ratelimit-Used"); rateLimitUsed != "" {
